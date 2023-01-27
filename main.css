@@ -1,0 +1,12 @@
+body {
+    font-family: sans-serif;
+}
+fieldset {
+    width: fit-content;
+    float: left;
+}
+canvas {
+    display: block;
+    margin: 10px auto;
+    max-width: 60vw;
+}

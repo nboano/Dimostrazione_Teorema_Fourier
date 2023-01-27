@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/gh/nboano/kinderc/kinderc.js"></script>
+    <script src="main.js"></script>
+    <assembly src="main.wasm"></assembly>
+    <link rel="stylesheet" href="main.css">
+    <title>Document</title>
+</head>
+<body>
+    <h1>DIMOSTRAZIONE DEL TEOREMA DI FOURIER</h1>
+    <h4>Boano 4CI</h4>
+    <fieldset>
+        <summary>Visualizza</summary>
+        <label style="color: black;">
+            <input type="checkbox" checked onchange="DisplayFunction(0,this.checked)"> SINUSOIDE<br>
+        </label>
+        <label style="color: red;">
+            <input type="checkbox" checked onchange="DisplayFunction(1,this.checked)"> ONDA QUADRA<br>
+        </label>
+        <label style="color: green;">
+            <input type="checkbox" checked onchange="DisplayFunction(2,this.checked)"> 3<sup>a</sup> ARMONICA - ONDA QUADRA<br>
+        </label>
+        <label style="color: violet;">
+            <input type="checkbox" checked onchange="DisplayFunction(3,this.checked)"> 5<sup>a</sup> ARMONICA - ONDA QUADRA<br>
+        </label>
+        <label style="color: yellowgreen;">
+            <input type="checkbox" checked onchange="DisplayFunction(4,this.checked)"> 7<sup>a</sup> ARMONICA - ONDA QUADRA<br>
+        </label>
+        <label style="color: blue;">
+            <input type="checkbox" checked onchange="DisplayFunction(5,this.checked)"> 
+            SOMMA DELLE PRIME <input type="number" min="1" max="1000" value="3" onchange="setSquareHarmonicsNumber(this.valueAsNumber);"/> ARMONICHE<br> DELLA TRASFORMATA DELL'ONDA QUADRA<br>
+        </label>
+        <br><br>
+        <label>Intervallo visualizzato <select onchange="setT(Math.PI*this.value)">
+            <option value="0.5">&pi; / 2</option>
+            <option value="1">&pi;</option>
+            <option value="2">2&pi;</option>
+            <option value="4" selected>4&pi;</option>
+            <option value="6">6&pi;</option>
+            <option value="8">8&pi;</option>
+        </select></label>
+        <br><br>
+        <label>Delta <select onchange="setPrecision(Number(this.value))">
+            <option>0.1</option>
+            <option>0.05</option>
+            <option>0.01</option>
+            <option selected>0.005</option>
+            <option>0.001</option>
+        </select></label>
+        <br><br>
+        <button onclick="document.querySelector('canvas').requestFullscreen();">SCHERMO INTERO</button>
+    </fieldset>
+    <br>
+    <canvas width="1280" height="720"></canvas>
+</body>
+</html>

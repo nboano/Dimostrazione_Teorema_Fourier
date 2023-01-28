@@ -34,6 +34,10 @@
             <input type="checkbox" checked onchange="DisplayFunction(5,this.checked)"> 
             SOMMA DELLE PRIME <input type="number" min="1" max="1000" value="3" onchange="setSquareHarmonicsNumber(this.valueAsNumber);"/> ARMONICHE<br> DELLA TRASFORMATA DELL'ONDA QUADRA<br>
         </label>
+        <label style="color: orange;">
+            <input type="checkbox" onchange="DisplayFunction(6,this.checked)"> 
+            SOMMA DELLE PRIME <input type="number" min="1" max="1000" value="3" onchange="setSawToothHarmonicsNumber(this.valueAsNumber);"/> ARMONICHE<br> DELLA TRASFORMATA DELL'ONDA A DENTE DI SEGA<br>
+        </label>
         <br><br>
         <label>Intervallo visualizzato <select onchange="setT(Math.PI*this.value)">
             <option value="0.5">&pi; / 2</option>

@@ -91,6 +91,21 @@ namespace Functions
         return n;
     }
 
+    /// @brief Numero di armoniche usate nella funzione SawToothFourier.
+    int SawToothHarmonicsNumber = 3;
+
+    double SawToothFourier(double x) {
+        int coeff = 1;
+        double n = 0;
+        for (int i = 0; i < SawToothHarmonicsNumber; i++)
+        {
+            n += pow(-1, coeff) * (sin(coeff * x) / coeff);
+            coeff++;
+        }
+        
+        return n * .5;
+    }
+
     /// @brief Array di funzioni visualizzate nel render.
     struct {
         bool Display;
@@ -102,6 +117,7 @@ namespace Functions
             true, DRAW_FN_POINT(Functions::SquareHarmonics[5], (W-3), (H-3), T, 0, Precision, 3, "violet"),
             true, DRAW_FN_POINT(Functions::SquareHarmonics[7], (W-3), (H-3), T, 0, Precision, 3, "yellowgreen"),
             true, DRAW_FN_POINT(Functions::SquareFourier, (W-3), (H-3), T, 0, Precision, 5, "blue"),
+            false, DRAW_FN_POINT(Functions::SawToothFourier, (W-3), (H-3), T, 0, Precision, 5, "orange"),
     };
 
     exported void DisplayFunction(int index, bool v) {
@@ -110,6 +126,10 @@ namespace Functions
 
     exported void setSquareHarmonicsNumber(int n) {
         SquareHarmonicsNumber = n;
+    }
+
+    exported void setSawToothHarmonicsNumber(int n) {
+        SawToothHarmonicsNumber = n;
     }
 
     void Render() {

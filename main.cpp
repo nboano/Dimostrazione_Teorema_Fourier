@@ -3,8 +3,5 @@
 
 int main() {
     PageCanvas::Init();
-
-    setInterval([](void*) {
-       Functions::Render();
-    }, 0);
+    Functions::StartRender();
 }

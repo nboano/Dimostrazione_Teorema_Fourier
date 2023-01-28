@@ -13,31 +13,39 @@
 <body>
     <h1>DIMOSTRAZIONE DEL TEOREMA DI FOURIER</h1>
     <h4>Boano 4CI</h4>
-    <fieldset>
-        <summary>Visualizza</summary>
+    <fieldset class="main">
         <label style="color: black;">
             <input type="checkbox" checked onchange="DisplayFunction(0,this.checked)"> SINUSOIDE<br>
         </label>
-        <label style="color: red;">
-            <input type="checkbox" checked onchange="DisplayFunction(1,this.checked)"> ONDA QUADRA<br>
-        </label>
-        <label style="color: green;">
-            <input type="checkbox" checked onchange="DisplayFunction(2,this.checked)"> 3<sup>a</sup> ARMONICA - ONDA QUADRA<br>
-        </label>
-        <label style="color: violet;">
-            <input type="checkbox" checked onchange="DisplayFunction(3,this.checked)"> 5<sup>a</sup> ARMONICA - ONDA QUADRA<br>
-        </label>
-        <label style="color: yellowgreen;">
-            <input type="checkbox" checked onchange="DisplayFunction(4,this.checked)"> 7<sup>a</sup> ARMONICA - ONDA QUADRA<br>
-        </label>
-        <label style="color: blue;">
-            <input type="checkbox" checked onchange="DisplayFunction(5,this.checked)"> 
-            SOMMA DELLE PRIME <input type="number" min="1" max="1000" value="3" onchange="setSquareHarmonicsNumber(this.valueAsNumber);"/> ARMONICHE<br> DELLA TRASFORMATA DELL'ONDA QUADRA<br>
-        </label>
-        <label style="color: orange;">
-            <input type="checkbox" onchange="DisplayFunction(6,this.checked)"> 
-            SOMMA DELLE PRIME <input type="number" min="1" max="1000" value="3" onchange="setSawToothHarmonicsNumber(this.valueAsNumber);"/> ARMONICHE<br> DELLA TRASFORMATA DELL'ONDA A DENTE DI SEGA<br>
-        </label>
+        <fieldset>
+            <legend>
+                <label style="color: red;">
+                    <input type="checkbox" checked onchange="DisplayFunction(1,this.checked)"> ONDA QUADRA [IDEALE]<br>
+                </label>
+            </legend>
+            Armoniche: 
+            <label style="color: green;">
+                <input type="checkbox" checked onchange="DisplayFunction(2,this.checked)"> 3<sup>a</sup>
+            </label>
+            <label style="color: violet;">
+                <input type="checkbox" checked onchange="DisplayFunction(3,this.checked)"> 5<sup>a</sup>
+            </label>
+            <label style="color: yellowgreen;">
+                <input type="checkbox" checked onchange="DisplayFunction(4,this.checked)"> 7<sup>a</sup>
+            </label>
+            <br><br>
+            <label style="color: blue;">
+                <input type="checkbox" checked onchange="DisplayFunction(5,this.checked)"> 
+                SERIE DI FOURIER (<input type="number" min="1" max="100" value="3" onchange="setSquareHarmonicsNumber(this.valueAsNumber);"/> <i>Armoniche</i>)
+            </label>
+        </fieldset>
+        <fieldset style="margin-top: 10px;">
+            <legend>ONDA A DENTE DI SEGA</legend>
+            <label style="color: orange;">
+                <input type="checkbox" onchange="DisplayFunction(6,this.checked)"> 
+                SERIE DI FOURIER (<input type="number" min="1" max="100" value="3" onchange="setSawToothHarmonicsNumber(this.valueAsNumber);"/> <i>Armoniche</i>)
+            </label>
+        </fieldset>
         <br><br>
         <label>Intervallo visualizzato <select onchange="setT(Math.PI*this.value)">
             <option value="0.5">&pi; / 2</option>
@@ -55,6 +63,10 @@
             <option selected>0.005</option>
             <option>0.001</option>
         </select></label>
+        <br>
+        <label>
+            Intervallo tra i render <input type="range" min="0" max="1000" value="10" onchange="setint(Number(this.value));">
+        </label>
         <br><br>
         <button onclick="document.querySelector('canvas').requestFullscreen();">SCHERMO INTERO</button>
     </fieldset>

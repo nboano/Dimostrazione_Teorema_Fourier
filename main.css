@@ -1,7 +1,7 @@
 body {
     font-family: sans-serif;
 }
-fieldset {
+fieldset.main {
     width: fit-content;
     float: left;
 }
@@ -9,4 +9,7 @@ canvas {
     display: block;
     margin: 10px auto;
     max-width: 60vw;
+}
+input[type="number"] {
+    width: 40px;
 }

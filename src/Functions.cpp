@@ -50,7 +50,7 @@ namespace Functions
         return sin(x);
     }
     double SquareWave(double x) {
-        return floor(SineWave(x)) == 0? 1 : -1;
+        return floor(SineWave(x)) == 0? .78 : -.78;
     }
     double(*SquareHarmonics[])(double) = {
         [](double) {return .0;},
@@ -112,7 +112,7 @@ namespace Functions
         void(*DrawPt)(bool);
     } All[] = {
             true, DRAW_FN_POINT(Functions::SineWave, (W-3), (H-3), T, 0, Precision, 3, "black"),
-            true, DRAW_FN_POINT(Functions::SquareWave, (W-3), (H-3), T, 0, Precision, 3, "red"),
+            true, DRAW_FN_POINT(Functions::SquareWave, (W-3), (H-3), T, 0, Precision, 2, "red"),
             true, DRAW_FN_POINT(Functions::SquareHarmonics[3], (W-3), (H-3), T, 0, Precision, 3, "green"),
             true, DRAW_FN_POINT(Functions::SquareHarmonics[5], (W-3), (H-3), T, 0, Precision, 3, "violet"),
             true, DRAW_FN_POINT(Functions::SquareHarmonics[7], (W-3), (H-3), T, 0, Precision, 3, "yellowgreen"),
@@ -132,8 +132,20 @@ namespace Functions
         SawToothHarmonicsNumber = n;
     }
 
-    void Render() {
-         for(int i = 0; i < sizeof(All) / sizeof(All[0]); i++) 
-                All[i].DrawPt(All[i].Display);
+    int Interval = 10;
+
+    exported void setint(int n) {
+        Interval = n;
+    }
+
+    void Render(void*) {
+        for (int i = 0; i < 100; i++)
+         for(int j = 0; j < sizeof(All) / sizeof(All[0]); j++) 
+                All[j].DrawPt(All[j].Display);
+        setTimeout(Render, Interval);
+    }
+
+    void StartRender() {
+        setTimeout(Render, Interval);
     }
 } // namespace Functions

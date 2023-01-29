@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/gh/nboano/kinderc/kinderc.js"></script>
     <assembly src="main.wasm"></assembly>
     <link rel="stylesheet" href="main.css">
-    <title>Document</title>
+    <title>DIMOSTRAZIONE DEL TEOREMA DI FOURIER</title>
 </head>
 <body>
     <h1>DIMOSTRAZIONE DEL TEOREMA DI FOURIER</h1>
@@ -45,6 +45,13 @@
                 SERIE DI FOURIER (<input type="number" min="1" max="100" value="3" onchange="setSawToothHarmonicsNumber(this.valueAsNumber);"/> <i>Armoniche</i>)
             </label>
         </fieldset>
+        <fieldset style="margin-top: 10px;">
+            <legend>ONDA TRIANGOLARE</legend>
+            <label style="color: darkviolet;">
+                <input type="checkbox" onchange="DisplayFunction(7,this.checked)"> 
+                SERIE DI FOURIER (<input type="number" min="1" max="100" value="3" onchange="setTriangleHarmonicsNumber(this.valueAsNumber);"/> <i>Armoniche</i>)
+            </label>
+        </fieldset>
         <br><br>
         <label>Intervallo visualizzato <select onchange="setT(Math.PI*this.value)">
             <option value="0.125">T / 16</option>
@@ -70,7 +77,7 @@
         </select></label>
         <br>
         <label>
-            Intervallo tra i render <input type="range" min="0" max="1000" value="10" onchange="setint(Number(this.value));">
+            Punti disegnati per render: <input type="range" min="1" max="1000" value="100" onchange="setPointsPerRender(Number(this.value));">
         </label>
         <br><br>
         <button onclick="document.querySelector('canvas').requestFullscreen();">SCHERMO INTERO</button>

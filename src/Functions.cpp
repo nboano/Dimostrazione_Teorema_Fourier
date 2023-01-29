@@ -49,7 +49,7 @@ namespace Functions
     double SineWave(double x) {
         return sin(x);
     }
-    double SquareWave(double x) {
+    double IdealSquareWave(double x) {
         return floor(SineWave(x)) == 0? .78 : -.78;
     }
     double(*SquareHarmonics[])(double) = {
@@ -106,18 +106,32 @@ namespace Functions
         return n * .5;
     }
 
+    int TriangleHarmonicsNumber = 3;
+
+    double TriangleFourier(double x) {
+        int coeff = 1;
+        double n = 0;
+        for (int i = 0; i < TriangleHarmonicsNumber; i++)
+        {
+            n += cos(coeff * x) / pow(coeff, 2);
+            coeff += 2;
+        }
+        return n*.5;
+    }
+
     /// @brief Array di funzioni visualizzate nel render.
     struct {
         bool Display;
         void(*DrawPt)(bool, bool);
     } All[] = {
         true, DRAW_FN_POINT(Functions::SineWave, (W-6), (H-6), T, 0, Precision, 6, "black"),
-        true, DRAW_FN_POINT(Functions::SquareWave, (W-6), (H-6), T, 0, Precision, 4, "red"),
+        true, DRAW_FN_POINT(Functions::IdealSquareWave, (W-6), (H-6), T, 0, Precision, 4, "red"),
         true, DRAW_FN_POINT(Functions::SquareHarmonics[3], (W-6), (H-6), T, 0, Precision, 6, "green"),
         true, DRAW_FN_POINT(Functions::SquareHarmonics[5], (W-6), (H-6), T, 0, Precision, 6, "violet"),
         true, DRAW_FN_POINT(Functions::SquareHarmonics[7], (W-6), (H-6), T, 0, Precision, 6, "yellowgreen"),
         true, DRAW_FN_POINT(Functions::SquareFourier, (W-6), (H-6), T, 0, Precision, 10, "blue"),
         false, DRAW_FN_POINT(Functions::SawToothFourier, (W-6), (H-6), T, 0, Precision, 10, "orange"),
+        false, DRAW_FN_POINT(Functions::TriangleFourier, (W-6), (H-6), T, 0, Precision, 10, "darkviolet"),
     };
 
     exported void DisplayFunction(int index, bool v) {
@@ -132,16 +146,20 @@ namespace Functions
         SawToothHarmonicsNumber = n;
     }
 
-    int Interval = 0;
+    exported void setTriangleHarmonicsNumber(int n) {
+        TriangleHarmonicsNumber = n;
+    }
 
-    exported void setint(int n) {
-        Interval = n;
+    int PointsPerRender = 100;
+
+    exported void setPointsPerRender(int n) {
+        PointsPerRender = n;
     }
 
     void Render(void*) {
         double start = microtime();
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < PointsPerRender; i++)
          for(int j = 0; j < sizeof(All) / sizeof(All[0]); j++) 
                 All[j].DrawPt(All[j].Display, j == 0);
 
@@ -149,11 +167,9 @@ namespace Functions
 
         $("#frameTime").innerText = (string)round(frameTime);
         $("#frameRate").innerText = (string)round(1000 / frameTime);
-
-        setTimeout(Render, Interval);
     }
 
     void StartRender() {
-        setTimeout(Render, Interval);
+        setInterval(Render, 0);
     }
 } // namespace Functions

@@ -132,7 +132,7 @@ namespace Functions
         SawToothHarmonicsNumber = n;
     }
 
-    int Interval = 10;
+    int Interval = 0;
 
     exported void setint(int n) {
         Interval = n;

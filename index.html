@@ -47,19 +47,25 @@
         </fieldset>
         <br><br>
         <label>Intervallo visualizzato <select onchange="setT(Math.PI*this.value)">
-            <option value="0.5">&pi; / 2</option>
-            <option value="1">&pi;</option>
-            <option value="2">2&pi;</option>
-            <option value="4" selected>4&pi;</option>
-            <option value="6">6&pi;</option>
-            <option value="8">8&pi;</option>
+            <option value="0.125">T / 16</option>
+            <option value="0.25">T / 8</option>
+            <option value="0.5">T / 4</option>
+            <option value="1">T / 2</option>
+            <option value="2">T</option>
+            <option value="4" selected>2 T</option>
+            <option value="6">3 T</option>
+            <option value="8">4 T</option>
+            <option value="10">5 T</option>
+            <option value="12">6 T</option>
+            <option value="14">7 T</option>
+            <option value="16">8 T</option>
         </select></label>
         <br><br>
         <label>Delta <select onchange="setPrecision(Number(this.value))">
             <option>0.1</option>
             <option>0.05</option>
-            <option>0.01</option>
-            <option selected>0.005</option>
+            <option selected>0.01</option>
+            <option>0.005</option>
             <option>0.001</option>
         </select></label>
         <br>
@@ -68,6 +74,10 @@
         </label>
         <br><br>
         <button onclick="document.querySelector('canvas').requestFullscreen();">SCHERMO INTERO</button>
+        <br><br>
+        Tempo rendering frame: <b id="frameTime">...</b> ms
+        <br>
+        Frame rate: <b id="frameRate">...</b> FPS
     </fieldset>
     <br>
     <canvas width="1280" height="720"></canvas>

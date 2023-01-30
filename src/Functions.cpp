@@ -1,5 +1,4 @@
-#include "D:\kinderc\kinderc.hpp"
-#include "PageCanvas.cpp"
+#include "include.h"
 
 /// @brief Crea una lambda che scrive un punto della funzione ogni qualvolta viene richiamata.
 /// @param f La funzione.
@@ -36,22 +35,36 @@ double T = M_PI * 4;
 /// @brief Precisione del render (delta tra i punti).
 double Precision = .01;
 
+/// @brief Imposta l'intervallo della funzione visualizzato nel canvas.
+/// @param v Intervallo da impostare.
 exported void setT(double v) {
     PageCanvas::Clear();
     T = v;
 }
+
+/// @brief Imposta la precisione (DELTA) del render.
+/// @param v Precisione impostata.
 exported void setPrecision(double v) {
     Precision = v;
 }
 
 namespace Functions
 {
+    /// @brief Funzione seno, implementata usando la successione di Taylor.
+    /// @param x Un angolo qualunque.
+    /// @return Il seno dell'angolo.
     double SineWave(double x) {
         return sin(x);
     }
+
+    /// @brief Funzione onda quadra [IDEALE]. Restituisce solo valori corrispondenti a -1 e 1.
+    /// @param x Valore in input.
+    /// @return Valore dell'onda quadra in output.
     double IdealSquareWave(double x) {
         return floor(SineWave(x)) == 0? .78 : -.78;
     }
+
+    /// @brief Array che raccoglie alcune armoniche dell'onda quadra.
     double(*SquareHarmonics[])(double) = {
         [](double) {return .0;},
 
@@ -80,12 +93,17 @@ namespace Functions
     /// @brief Numero di armoniche usate nella funzione SquareFourier.
     int SquareHarmonicsNumber = 3;
 
+    /// @brief Funzione onda quadra calcolata usando la successione di Fourier (con tanti termini quanto vale SquareHarmonicsNumber).
+    /// @param x Valore dell'ascissa.
+    /// @return Valore dell'ordinata.
     double SquareFourier(double x) {
         int coeff = 1;
         double n = 0;
         for (int i = 0; i < SquareHarmonicsNumber; i++)
         {
             n += SineWave(coeff * x) / coeff;
+
+            // Incremento il coefficiente di 2 perchè la funzione ha solo armoniche dispari.
             coeff += 2;
         }
         return n;
@@ -94,6 +112,9 @@ namespace Functions
     /// @brief Numero di armoniche usate nella funzione SawToothFourier.
     int SawToothHarmonicsNumber = 3;
 
+    /// @brief Funzione onda a dente di sega calcolata usando la successione di Fourier (con tanti termini quanto vale SawToothHarmonicsNumber).
+    /// @param x Valore dell'ascissa.
+    /// @return Valore dell'ordinata.
     double SawToothFourier(double x) {
         int coeff = 1;
         double n = 0;
@@ -106,8 +127,12 @@ namespace Functions
         return n * .5;
     }
 
+    /// @brief Numero di armoniche usate nella funzione TriangleFourier.
     int TriangleHarmonicsNumber = 3;
 
+    /// @brief Funzione onda a triangolo calcolata usando la successione di Fourier (con tanti termini quanto vale TriangleHarmonicsNumber).
+    /// @param x Valore dell'ascissa.
+    /// @return Valore dell'ordinata.
     double TriangleFourier(double x) {
         int coeff = 1;
         double n = 0;
@@ -120,7 +145,7 @@ namespace Functions
     }
 
     /// @brief Array di funzioni visualizzate nel render.
-    struct {
+    struct t_fnelm {
         bool Display;
         void(*DrawPt)(bool, bool);
     } All[] = {
@@ -134,28 +159,41 @@ namespace Functions
         false, DRAW_FN_POINT(Functions::TriangleFourier, (W-6), (H-6), T, 0, Precision, 10, "darkviolet"),
     };
 
+    /// @brief Imposta una funzione come visualizzabile o meno.
+    /// @param index L'indice della funzione nell'array Functions::All.
+    /// @param v Un valore booleano che indice se la funzione deve essere visualizzata o meno.
     exported void DisplayFunction(int index, bool v) {
         All[index].Display = v;
     }
 
+    /// @brief Imposta il numero di armoniche della funzione SquareFourier.
+    /// @param n Numero di armoniche.
     exported void setSquareHarmonicsNumber(int n) {
         SquareHarmonicsNumber = n;
     }
 
+    /// @brief Imposta il numero di armoniche della funzione SawToothFourier.
+    /// @param n Numero di armoniche.
     exported void setSawToothHarmonicsNumber(int n) {
         SawToothHarmonicsNumber = n;
     }
 
+    /// @brief Imposta il numero di armoniche della funzione TriangleFourier.
+    /// @param n Numero di armoniche.
     exported void setTriangleHarmonicsNumber(int n) {
         TriangleHarmonicsNumber = n;
     }
 
+    /// @brief Numero di punti disegnati a ogni render.
     int PointsPerRender = 100;
 
+    /// @brief Imposta il numero di punti disegnati a ogni render.
+    /// @param n Numero di punti.
     exported void setPointsPerRender(int n) {
         PointsPerRender = n;
     }
 
+    /// @brief Esegue il render di tanti punti quanto vale PointsPerRender. Calcola inoltre tempo di rendering e frame rate.
     void Render(void*) {
         double start = microtime();
 
@@ -169,6 +207,7 @@ namespace Functions
         $("#frameRate").innerText = (string)round(1000 / frameTime);
     }
 
+    /// @brief Avvia il render.
     void StartRender() {
         setInterval(Render, 0);
     }

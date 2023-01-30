@@ -1,8 +1,7 @@
-#include "D:\kinderc\kinderc.hpp"
+#include "include.h"
 
 namespace PageCanvas
 {
-    //static HTMLCanvasElement canvas = $("canvas");
     #define canvas HTMLCanvasElement($("canvas"))
 
     void Init() {
@@ -20,4 +19,6 @@ namespace PageCanvas
     void Clear() {
         canvas.Clear();
     }
+
+    #undef canvas
 } // namespace PageCanvas

@@ -1,5 +1,4 @@
-#include "D:/kinderc/kinderc.hpp"
-#include "src/Functions.cpp"
+#include "src/include.h"
 
 int main() {
     PageCanvas::Init();

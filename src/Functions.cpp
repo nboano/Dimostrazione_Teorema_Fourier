@@ -1,4 +1,4 @@
-#include "include.h"
+#include "include.hpp"
 
 /// @brief Crea una lambda che scrive un punto della funzione ogni qualvolta viene richiamata.
 /// @param f La funzione.

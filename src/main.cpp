@@ -1,4 +1,4 @@
-#include "src/include.h"
+#include "include.h"
 
 int main() {
     PageCanvas::Init();

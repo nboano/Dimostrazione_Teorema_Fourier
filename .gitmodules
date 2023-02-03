@@ -1,0 +1,3 @@
+[submodule "lib/kinderc"]
+	path = lib/kinderc
+	url = https://github.com/nboano/kinderc.git

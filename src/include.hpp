@@ -1,7 +1,6 @@
 #pragma once
 
-/// @brief Libreria KinderC
-#include "D:/kinderc/kinderc.hpp"
+#include "kinderc@20230203/kinderc.hpp"
 
 #include "PageCanvas.cpp"
 #include "Functions.cpp"

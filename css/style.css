@@ -1,15 +1,13 @@
-body {
-    font-family: sans-serif;
-}
-fieldset.main {
-    width: fit-content;
-    float: left;
-}
 canvas {
     display: block;
-    margin: 10px auto;
-    max-width: 60vw;
+    margin: 100px auto;
+    max-width: 100%;
 }
-input[type="number"] {
-    width: 40px;
+.imgonda {
+    margin: 10px;
+}
+input.harmonics {
+    border: none;
+    width: 50px;
+    text-align: right;
 }

@@ -4,7 +4,15 @@ namespace PageCanvas
 {
     #define canvas HTMLCanvasElement($("canvas"))
 
+    /// @brief Larghezza del canvas (px)
+    int Width;
+
+    /// @brief Altezza del canvas (px)
+    int Height;
+
     void Init() {
+        Width = (int)canvas.Width;
+        Height = (int)canvas.Height;
         canvas.Init();
     }
 

@@ -23,12 +23,6 @@
     if(dw) PageCanvas::DrawPoint(ex,ey,linewidth,fillStyle);\
 }\
 
-/// @brief Risoluzione orizzontale del render.
-int W = 1280;
-
-/// @brief Risoluzione verticale del render.
-int H = 720;
-
 /// @brief Intervallo di funzioni visualizzato.
 double T = M_PI * 4;
 
@@ -149,14 +143,14 @@ namespace Functions
         bool Display;
         void(*DrawPt)(bool, bool);
     } All[] = {
-        true, DRAW_FN_POINT(Functions::SineWave, (W-6), (H-6), T, 0, Precision, 6, "black"),
-        true, DRAW_FN_POINT(Functions::IdealSquareWave, (W-6), (H-6), T, 0, Precision, 4, "red"),
-        true, DRAW_FN_POINT(Functions::SquareHarmonics[3], (W-6), (H-6), T, 0, Precision, 6, "green"),
-        true, DRAW_FN_POINT(Functions::SquareHarmonics[5], (W-6), (H-6), T, 0, Precision, 6, "violet"),
-        true, DRAW_FN_POINT(Functions::SquareHarmonics[7], (W-6), (H-6), T, 0, Precision, 6, "yellowgreen"),
-        true, DRAW_FN_POINT(Functions::SquareFourier, (W-6), (H-6), T, 0, Precision, 10, "blue"),
-        false, DRAW_FN_POINT(Functions::SawToothFourier, (W-6), (H-6), T, 0, Precision, 10, "orange"),
-        false, DRAW_FN_POINT(Functions::TriangleFourier, (W-6), (H-6), T, 0, Precision, 10, "darkviolet"),
+        true, DRAW_FN_POINT(Functions::SineWave, (PageCanvas::Width-6), (PageCanvas::Height-6), T, 0, Precision, 6, "black"),
+        true, DRAW_FN_POINT(Functions::IdealSquareWave, (PageCanvas::Width-6), (PageCanvas::Height-6), T, 0, Precision, 4, "red"),
+        true, DRAW_FN_POINT(Functions::SquareHarmonics[3], (PageCanvas::Width-6), (PageCanvas::Height-6), T, 0, Precision, 6, "green"),
+        true, DRAW_FN_POINT(Functions::SquareHarmonics[5], (PageCanvas::Width-6), (PageCanvas::Height-6), T, 0, Precision, 6, "violet"),
+        true, DRAW_FN_POINT(Functions::SquareHarmonics[7], (PageCanvas::Width-6), (PageCanvas::Height-6), T, 0, Precision, 6, "yellowgreen"),
+        true, DRAW_FN_POINT(Functions::SquareFourier, (PageCanvas::Width-6), (PageCanvas::Height-6), T, 0, Precision, 10, "blue"),
+        false, DRAW_FN_POINT(Functions::SawToothFourier, (PageCanvas::Width-6), (PageCanvas::Height-6), T, 0, Precision, 10, "orange"),
+        false, DRAW_FN_POINT(Functions::TriangleFourier, (PageCanvas::Width-6), (PageCanvas::Height-6), T, 0, Precision, 10, "darkviolet"),
     };
 
     /// @brief Imposta una funzione come visualizzabile o meno.
@@ -207,8 +201,33 @@ namespace Functions
         $("#frameRate").innerText = (string)round(1000 / frameTime);
     }
 
+    int RenderProcessHandler;
+
     /// @brief Avvia il render.
     void StartRender() {
-        setInterval(Render, 0);
+        RenderProcessHandler = setInterval(Render, 0);
+    }
+
+    /// @brief Ferma il render.
+    void StopRender() {
+        clearInterval(RenderProcessHandler);
+    }
+
+    exported void ToggleRender() {
+        static bool rendering = false;
+        rendering = !rendering;
+
+        HTMLElement btn = $("#btnToggle");
+
+        if(rendering)  {
+            StopRender();
+            btn.className = "btn btn-success";
+            btn.innerHTML = "<i class='fa fa-play'></i>";
+        }
+        else {
+            StartRender();
+            btn.className = "btn btn-danger";
+            btn.innerHTML = "<i class='fa fa-stop'></i>";
+        }
     }
 } // namespace Functions

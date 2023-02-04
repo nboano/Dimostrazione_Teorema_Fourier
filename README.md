@@ -1,5 +1,5 @@
 # Rappresentazione visiva di alcune onde elementari attraverso le serie di Fourier
-### Di Niccolò Boano
+### Di Niccolò Boano & Alberto Gonella
 
 ## Utilizzo
 
@@ -16,3 +16,7 @@ lib/kinderc/kccompile src/main.cpp src/main.wasm
 ```
 
 *(&Egrave; necessario avere installato il compilatore CLANG/LLVM).*
+
+## Screenshots
+
+![Finestra aperta](img/screenshots/finestra.png)

@@ -138,11 +138,16 @@ namespace Functions
         return n*.5;
     }
 
+    double Clearer(double) {
+        return 0;
+    }
+
     /// @brief Array di funzioni visualizzate nel render.
     struct t_fnelm {
         bool Display;
         void(*DrawPt)(bool, bool);
     } All[] = {
+        true, DRAW_FN_POINT(Functions::Clearer, (PageCanvas::Width-6), (PageCanvas::Height-6), T, .008, Precision, 6, "yellow"),
         true, DRAW_FN_POINT(Functions::SineWave, (PageCanvas::Width-6), (PageCanvas::Height-6), T, 0, Precision, 6, "black"),
         true, DRAW_FN_POINT(Functions::IdealSquareWave, (PageCanvas::Width-6), (PageCanvas::Height-6), T, 0, Precision, 4, "red"),
         true, DRAW_FN_POINT(Functions::SquareHarmonics[3], (PageCanvas::Width-6), (PageCanvas::Height-6), T, 0, Precision, 6, "green"),

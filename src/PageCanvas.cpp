@@ -2,6 +2,7 @@
 
 namespace PageCanvas
 {
+    /// @brief Canvas dove vengono disegnate le funzioni.
     #define canvas HTMLCanvasElement($("canvas"))
 
     /// @brief Larghezza del canvas (px)
@@ -10,9 +11,17 @@ namespace PageCanvas
     /// @brief Altezza del canvas (px)
     int Height;
 
+    void SetResolution(int w, int h) {
+        Width = w;
+        Height = h;
+        canvas.setAttribute("width", (string)w);
+        canvas.setAttribute("height", (string)h);
+    }
+
     void Init() {
-        Width = (int)canvas.Width;
-        Height = (int)canvas.Height;
+        ScreenInformations si = Enviroment::Screen;
+
+        SetResolution(si.Width, si.Height);
         canvas.Init();
     }
 

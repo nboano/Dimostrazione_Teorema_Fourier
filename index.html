@@ -29,29 +29,48 @@
                 <label style="color: black;" title="Armonica principale">
                     <img src="img/sinusoide.png" class="imgonda"/>
                     <div class="form-check form-check-inline form-switch">
-                        <input type="checkbox" class="form-check-input" checked onchange="DisplayFunction(0,this.checked)">
+                        <input type="checkbox" class="form-check-input" checked onchange="DisplayFunction(1,this.checked)">
                     </div>
                 </label>
                 <br>
-                <label style="color: blue;">
+
+                <label>
                     <img src="img/quadra.png" class="imgonda"/>
                     <div class="form-check form-check-inline form-switch">
-                        <input type="checkbox" class="form-check-input" checked onchange="DisplayFunction(5,this.checked);DisplayFunction(1,this.checked);DisplayFunction(2,this.checked);DisplayFunction(3,this.checked);DisplayFunction(4,this.checked)">
-                        <input type="number" class="harmonics" min="1" max="100" value="3" onchange="setSquareHarmonicsNumber(this.valueAsNumber);"/>
-                        Armoniche
+                        <input type="checkbox" class="form-check-input" checked onchange="DisplayFunction(6,this.checked);DisplayFunction(2,this.checked);DisplayFunction(3,this.checked);DisplayFunction(4,this.checked);DisplayFunction(5,this.checked)">
                     </div>
                 </label>
-                <br><br>
-                ONDA A DENTE DI SEGA
+                <label style="color: blue;">
+                    <input type="number" class="harmonics" min="1" max="100" value="3" onchange="setSquareHarmonicsNumber(this.valueAsNumber);"/>
+                    Armoniche
+                </label>
+
+                <br>
+
+                <label>
+                    <img src="img/dente-sega.png" class="imgonda"/>
+                    <div class="form-check form-check-inline form-switch">
+                        <input type="checkbox" class="form-check-input" onchange="DisplayFunction(7,this.checked);">
+                    </div>
+                </label>
                 <label style="color: orange;">
-                    <input type="checkbox" onchange="DisplayFunction(6,this.checked)"> 
-                    SERIE DI FOURIER (<input type="number" min="1" max="100" value="3" onchange="setSawToothHarmonicsNumber(this.valueAsNumber);"/> <i>Armoniche</i>)
+                    <input type="number" class="harmonics" min="1" max="100" value="3" onchange="setSawToothHarmonicsNumber(this.valueAsNumber);"/>
+                    Armoniche
                 </label>
-                ONDA TRIANGOLARE
+
+                <br>
+
+                <label>
+                    <img src="img/triangolo.png" class="imgonda"/>
+                    <div class="form-check form-check-inline form-switch">
+                        <input type="checkbox" class="form-check-input" onchange="DisplayFunction(8,this.checked);">
+                    </div>
+                </label>
                 <label style="color: darkviolet;">
-                    <input type="checkbox" onchange="DisplayFunction(7,this.checked)"> 
-                    SERIE DI FOURIER (<input type="number" min="1" max="100" value="3" onchange="setTriangleHarmonicsNumber(this.valueAsNumber);"/> <i>Armoniche</i>)
+                    <input type="number" class="harmonics" min="1" max="100" value="3" onchange="setTriangleHarmonicsNumber(this.valueAsNumber);"/>
+                    Armoniche
                 </label>
+
                 <br><br>
                 <label>Intervallo visualizzato <select onchange="setT(Math.PI*this.value)">
                     <option value="0.125">T / 16</option>
@@ -68,25 +87,17 @@
                     <option value="16">8 T</option>
                 </select></label>
                 <br><br>
-                <label>Delta <select onchange="setPrecision(Number(this.value))">
-                    <option>0.1</option>
-                    <option>0.05</option>
-                    <option selected>0.01</option>
-                    <option>0.005</option>
-                    <option>0.001</option>
+                <label>Precisione <select onchange="setPrecision(Number(this.value))">
+                    <option selected value="0.01">Precisione media</option>
+                    <option value="0.05">Precisione alta</option>
+                    <option value="0.001">Precisione molto alta</option>
                 </select></label>
-                <br>
-                <label>
-                    Punti disegnati per render: <input type="range" min="1" max="1000" value="100" onchange="setPointsPerRender(Number(this.value));">
-                </label>
-                <br><br>
-                <br><br>
-                Tempo rendering frame: <b id="frameTime">...</b> ms
-                <br>
-                Frame rate: <b id="frameRate">...</b> FPS
             </div>
             <div class="col-8">
-                <canvas width="1280" height="720"></canvas>
+                <div>
+                    <b id="frameRate">...</b> FPS @ <b id="frameTime">...</b> ms
+                </div>
+                <canvas></canvas>
             </div>
         </div>
     </div>

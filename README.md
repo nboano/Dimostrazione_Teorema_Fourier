@@ -8,6 +8,7 @@
 - Per eseguire l'applicativo localmente, clonare il repository e
     - Su Windows, eseguire il file ```start.cmd``` (è necessario aver installato il browser Edge).
     - Su MacOS, eseguire il file ```start.command``` (è necessario aver installato il browser Chrome).
+    - Su Linux, eseguire il file ```start.sh``` (è necessario aver installato il browser Chrome).
 
 ## Compilazione
 

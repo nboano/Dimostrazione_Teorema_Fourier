@@ -5,7 +5,9 @@
 
 - Per utilizzare l'applicativo da browser, cliccare [qui](https://nboano.github.io/Dimostrazione_Teorema_Fourier).
 
-- Per eseguire l'applicativo localmente, clonare il repository ed eseguire il file ```start.cmd``` (è necessario aver installato il browser Edge).
+- Per eseguire l'applicativo localmente, clonare il repository e
+    - Su Windows, eseguire il file ```start.cmd``` (è necessario aver installato il browser Edge).
+    - Su MacOS, eseguire il file ```start.command``` (è necessario aver installato il browser Chrome).
 
 ## Compilazione
 

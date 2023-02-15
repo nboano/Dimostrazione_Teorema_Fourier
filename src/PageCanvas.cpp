@@ -29,10 +29,6 @@ namespace PageCanvas
         canvas.DrawRectangle(x, y, size, size, color);
     }
 
-    void ClearXAt(double x, int size) {
-        canvas.DrawRectangle(x, 0, size, canvas.Height, "#FFF");
-    }
-
     void Clear() {
         canvas.Clear();
     }

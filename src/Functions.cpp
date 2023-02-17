@@ -4,18 +4,39 @@
 #include "Functions.SquareWave.cpp"
 #include "Functions.SawtoothWave.cpp"
 
-#define HM_PRECISION (Functions::Precision*.1)
+#define HM_PRECISION (Functions::Precision)
+#define HM_MAXN (1 << 7)
 
-/// @brief Crea una lambda che scrive un punto della funzione ogni qualvolta viene richiamata.
-/// @param f La funzione.
-/// @param W La larghezza del render.
-/// @param H L'altezza del render.
-/// @param image L'insieme immagine rappresentato della funzione.
-/// @param delta Il delta iniziale della funzione.
-/// @param linewidth Spessore della linea della funzione in pixel.
-/// @param fillStyle Colore della linea (CSS).
+struct WaveInfo {
+    double* prevx;
+    double* prevy;
+    double* x;
+
+    void Reset() {
+        *x = 0;
+        *prevx = 0;
+        *prevy = PageCanvas::Height/2;
+    }
+};
+
+struct HarmonicsGroupInfo {
+    double* prevx_arr;
+    double* prevy_arr;
+    double* x;
+
+    void Reset() {
+        *x = 0;
+        for (int i = 0; i < HM_MAXN; i++)
+        {
+            prevx_arr[i] = 0;
+            prevy_arr[i] = PageCanvas::Height/2;
+        }
+    }
+};
+
+
 #define DRAW_FN_POINT(f, W, H, image, phase, delta, linewidth, fillStyle, onlypoints) \
-[](double p = 0, const char* color = fillStyle) {\
+[](double p = 0, const char* color = fillStyle) -> WaveInfo {\
     static double x = phase;\
     double y = f(x, p);\
     double ex = (W / (image)) * x;\
@@ -26,17 +47,38 @@
     if(ex >= W) {\
         x = phase;\
         last_x = 0;\
-        return;\
+        return {&last_x,&last_y,&x};\
     }\
-    /*if(onlypoints || ex - last_x < Functions::Precision*linewidth) PageCanvas::DrawPoint(ex,ey,linewidth,color);\
-    else PageCanvas::DrawLine((int)ex, last_y, (int)ex, ey, linewidth, color);*/\
-    if(onlypoints) PageCanvas::DrawPoint(ex,ey,linewidth,color);\
-    else PageCanvas::DrawLine(last_x, last_y, ex, ey, linewidth, color);\
+    PageCanvas::DrawLine(last_x, last_y, ex, ey, linewidth, color);\
     last_x = ex; last_y = ey;\
+    return {&last_x,&last_y,&x};\
+}\
+
+#define DRAW_HARMONIC_POINT(f, W, H, image, phase, delta, linewidth, fillStyle, onlypoints) \
+[](int p = 0, const char* color = fillStyle) -> HarmonicsGroupInfo {\
+    static double x = phase;\
+    double y = f(x, p);\
+    double ex = (W / (image)) * x;\
+    double ey = (H/2 +  y* H/2);\
+    x += delta;\
+    static double last_x[HM_MAXN];\
+    static double last_y[HM_MAXN];\
+    if(ex >= W) {\
+        x = phase;\
+        for(int i = 0; i < HM_MAXN; i++) {last_x[i] = 0; last_y[i] = 0;}\
+        return {last_x,last_y,&x};\
+    }\
+    if(!last_y[p]) last_y[p] = H/2;\
+    PageCanvas::DrawLine(last_x[p], last_y[p], ex, ey, linewidth, color);\
+    last_x[p] = ex; last_y[p] = ey;\
+    return {last_x,last_y,&x};\
 }\
 
 namespace Functions
 {
+    WaveInfo CurrentWave;
+    HarmonicsGroupInfo CurrentHarmonics;
+
     const char* HARMONICS_COLORS[] = {
         "red",
         "grey",
@@ -56,7 +98,7 @@ namespace Functions
     };
 
     /// @brief Funzione selezionata.
-    Function Selected = SQUARE;
+    Function Selected;
 
     /// @brief Intervallo di funzioni visualizzato.
     double T = M_PI * 4;
@@ -80,36 +122,50 @@ namespace Functions
     bool ViewHarmonics = true;
 
     exported void SetFirstDrawnHarmonic(int hn) {
+        CurrentWave.Reset();
+        CurrentHarmonics.Reset();
         PageCanvas::Clear();
         FirstDrawnHarmonic = hn;
     }
 
     exported void SetLastDrawnHarmonic(int hn) {
+        CurrentWave.Reset();
+        CurrentHarmonics.Reset();
         PageCanvas::Clear();
         LastDrawnHarmonic = hn;
     }
 
     exported void SetHarmonicsNumber(int hn) {
+        CurrentWave.Reset();
+        CurrentHarmonics.Reset();
         PageCanvas::Clear();
         HarmonicsNumber = hn;
     }
 
     exported void SetT(double v) {
+        CurrentWave.Reset();
+        CurrentHarmonics.Reset();
         PageCanvas::Clear();
         T = v;
     }
 
     exported void SetPrecision(double v) {
+        CurrentWave.Reset();
+        CurrentHarmonics.Reset();
         PageCanvas::Clear();
         Precision = v;
     }
 
     exported void SelectFunction(Function sf) {
+        CurrentWave.Reset();
+        CurrentHarmonics.Reset();
         PageCanvas::Clear();
         Selected = sf;
     }
 
     exported void ToggleHarmonics(bool v) {
+        CurrentWave.Reset();
+        CurrentHarmonics.Reset();
         PageCanvas::Clear();
         ViewHarmonics = v;
     }
@@ -118,19 +174,19 @@ namespace Functions
 
     auto SquareFourierSeries = DRAW_FN_POINT(Functions::SquareWave::Series, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, Precision, 4, "blue", false);
 
-    auto SquareFourierHarmonic = DRAW_FN_POINT(Functions::SquareWave::SingleHarmonic, (PageCanvas::Width-3), (PageCanvas::Height-3), T, 0, HM_PRECISION, 3, "", true);
+    auto SquareFourierHarmonic = DRAW_HARMONIC_POINT(Functions::SquareWave::SingleHarmonic, (PageCanvas::Width-3), (PageCanvas::Height-3), T, 0, HM_PRECISION, 3, "", true);
 
     // DENTE DI SEGA
 
     auto SawToothFourierSeries = DRAW_FN_POINT(Functions::SawtoothWave::Series, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, Precision, 4, "orange", false);
 
-    auto SawToothFourierHarmonic = DRAW_FN_POINT(Functions::SawtoothWave::SingleHarmonic, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, HM_PRECISION, 3, "", true);
+    auto SawToothFourierHarmonic = DRAW_HARMONIC_POINT(Functions::SawtoothWave::SingleHarmonic, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, HM_PRECISION, 3, "", true);
 
     // TRIANGOLO
     
     auto TriangleFourierSeries = DRAW_FN_POINT(Functions::TriangleWave::Series, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, Precision, 4, "darkviolet", false);
 
-    auto TriangleFourierHarmonic = DRAW_FN_POINT(Functions::TriangleWave::SingleHarmonic, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, HM_PRECISION, 3, "", true);
+    auto TriangleFourierHarmonic = DRAW_HARMONIC_POINT(Functions::TriangleWave::SingleHarmonic, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, HM_PRECISION, 3, "", true);
 
     /// @brief Esegue il render di tanti punti quanto vale PointsPerRender. Calcola inoltre tempo di rendering e frame rate.
     void Render(void*) {
@@ -141,13 +197,13 @@ namespace Functions
             switch (Selected)
             {
                 case SQUARE:
-                    SquareFourierSeries(HarmonicsNumber);
+                    CurrentWave = SquareFourierSeries(HarmonicsNumber);
                     break;
                 case TRIANGLE:
-                    TriangleFourierSeries(HarmonicsNumber);
+                    CurrentWave = TriangleFourierSeries(HarmonicsNumber);
                     break;
                 case SAWTOOTH:
-                    SawToothFourierSeries(HarmonicsNumber);
+                    CurrentWave = SawToothFourierSeries(HarmonicsNumber);
                     break;
             }
             if(ViewHarmonics && FirstDrawnHarmonic && LastDrawnHarmonic)
@@ -155,13 +211,13 @@ namespace Functions
                     switch (Selected)
                     {
                         case SQUARE:
-                            SquareFourierHarmonic(i, HARMONICS_COLORS[i % (sizeof(HARMONICS_COLORS) / sizeof(HARMONICS_COLORS[0]))]);
+                            CurrentHarmonics = SquareFourierHarmonic(i, HARMONICS_COLORS[i % (sizeof(HARMONICS_COLORS) / sizeof(HARMONICS_COLORS[0]))]);
                             break;
                         case TRIANGLE:
-                            TriangleFourierHarmonic(i, HARMONICS_COLORS[i % (sizeof(HARMONICS_COLORS) / sizeof(HARMONICS_COLORS[0]))]);
+                            CurrentHarmonics = TriangleFourierHarmonic(i, HARMONICS_COLORS[i % (sizeof(HARMONICS_COLORS) / sizeof(HARMONICS_COLORS[0]))]);
                             break;
                         case SAWTOOTH:
-                            SawToothFourierHarmonic(i, HARMONICS_COLORS[i % (sizeof(HARMONICS_COLORS) / sizeof(HARMONICS_COLORS[0]))]);
+                            CurrentHarmonics = SawToothFourierHarmonic(i, HARMONICS_COLORS[i % (sizeof(HARMONICS_COLORS) / sizeof(HARMONICS_COLORS[0]))]);
                             break;
                     }
         }

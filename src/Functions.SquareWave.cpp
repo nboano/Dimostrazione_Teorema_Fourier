@@ -3,6 +3,7 @@
 namespace Functions::SquareWave
 {
     double SingleHarmonic(double x, int harmonicn) {
+        if(harmonicn % 2 == 0) return 0;
         return sin(harmonicn * x) / harmonicn;
     }
 

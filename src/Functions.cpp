@@ -4,6 +4,8 @@
 #include "Functions.SquareWave.cpp"
 #include "Functions.SawtoothWave.cpp"
 
+#define HM_PRECISION (Functions::Precision*.1)
+
 /// @brief Crea una lambda che scrive un punto della funzione ogni qualvolta viene richiamata.
 /// @param f La funzione.
 /// @param W La larghezza del render.
@@ -12,18 +14,25 @@
 /// @param delta Il delta iniziale della funzione.
 /// @param linewidth Spessore della linea della funzione in pixel.
 /// @param fillStyle Colore della linea (CSS).
-#define DRAW_FN_POINT(f, W, H, image, phase, delta, linewidth, fillStyle) \
+#define DRAW_FN_POINT(f, W, H, image, phase, delta, linewidth, fillStyle, onlypoints) \
 [](double p = 0, const char* color = fillStyle) {\
     static double x = phase;\
     double y = f(x, p);\
     double ex = (W / (image)) * x;\
     double ey = (H/2 +  y* H/2);\
     x += delta;\
+    static double last_x = ex;\
+    static double last_y = ey;\
     if(ex >= W) {\
         x = phase;\
+        last_x = 0;\
         return;\
     }\
-    PageCanvas::DrawPoint(ex,ey,linewidth,color);\
+    /*if(onlypoints || ex - last_x < Functions::Precision*linewidth) PageCanvas::DrawPoint(ex,ey,linewidth,color);\
+    else PageCanvas::DrawLine((int)ex, last_y, (int)ex, ey, linewidth, color);*/\
+    if(onlypoints) PageCanvas::DrawPoint(ex,ey,linewidth,color);\
+    else PageCanvas::DrawLine(last_x, last_y, ex, ey, linewidth, color);\
+    last_x = ex; last_y = ey;\
 }\
 
 namespace Functions
@@ -53,7 +62,7 @@ namespace Functions
     double T = M_PI * 4;
 
     /// @brief Precisione del render (delta tra i punti).
-    double Precision = .0005;
+    double Precision = .01;
 
     /// @brief Numero di armoniche calcolate.
     unsigned int HarmonicsNumber = 30;
@@ -107,27 +116,28 @@ namespace Functions
 
     // QUADRA
 
-    auto SquareFourierSeries = DRAW_FN_POINT(Functions::SquareWave::Series, (PageCanvas::Width-6), (PageCanvas::Height-6), T, 0, Precision, 6, "blue");
+    auto SquareFourierSeries = DRAW_FN_POINT(Functions::SquareWave::Series, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, Precision, 4, "blue", false);
 
-    auto SquareFourierHarmonic = DRAW_FN_POINT(Functions::SquareWave::SingleHarmonic, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, Precision, 4, "");
+    auto SquareFourierHarmonic = DRAW_FN_POINT(Functions::SquareWave::SingleHarmonic, (PageCanvas::Width-3), (PageCanvas::Height-3), T, 0, HM_PRECISION, 3, "", true);
 
     // DENTE DI SEGA
 
-    auto SawToothFourierSeries = DRAW_FN_POINT(Functions::SawtoothWave::Series, (PageCanvas::Width-6), (PageCanvas::Height-6), T, 0, Precision, 6, "orange");
+    auto SawToothFourierSeries = DRAW_FN_POINT(Functions::SawtoothWave::Series, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, Precision, 4, "orange", false);
 
-    auto SawToothFourierHarmonic = DRAW_FN_POINT(Functions::SawtoothWave::SingleHarmonic, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, Precision, 4, "");
+    auto SawToothFourierHarmonic = DRAW_FN_POINT(Functions::SawtoothWave::SingleHarmonic, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, HM_PRECISION, 3, "", true);
 
     // TRIANGOLO
     
-    auto TriangleFourierSeries = DRAW_FN_POINT(Functions::TriangleWave::Series, (PageCanvas::Width-6), (PageCanvas::Height-6), T, 0, Precision, 6, "darkviolet");
+    auto TriangleFourierSeries = DRAW_FN_POINT(Functions::TriangleWave::Series, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, Precision, 4, "darkviolet", false);
 
-    auto TriangleFourierHarmonic = DRAW_FN_POINT(Functions::TriangleWave::SingleHarmonic, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, Precision, 4, "");
+    auto TriangleFourierHarmonic = DRAW_FN_POINT(Functions::TriangleWave::SingleHarmonic, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, HM_PRECISION, 3, "", true);
 
     /// @brief Esegue il render di tanti punti quanto vale PointsPerRender. Calcola inoltre tempo di rendering e frame rate.
     void Render(void*) {
         double start = microtime();
 
-        for (int i = 0; i < PointsPerRender; i++) {
+        for (int i = 0; i < PointsPerRender; i++)
+        {
             switch (Selected)
             {
                 case SQUARE:

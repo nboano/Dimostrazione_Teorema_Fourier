@@ -88,12 +88,6 @@
                         <option value="1">T / 2</option>
                         <option value="2">T</option>
                         <option value="4" selected>2 T</option>
-                        <option value="6">3 T</option>
-                        <option value="8">4 T</option>
-                        <option value="10">5 T</option>
-                        <option value="12">6 T</option>
-                        <option value="14">7 T</option>
-                        <option value="16">8 T</option>
                     </select>
                 </div>
 
@@ -102,9 +96,9 @@
                 <div class="form-group">
                     <label for="cmbPrecisione">Precisione</label>
                     <select onchange="SetPrecision(Number(this.value))" class="form-control" id="cmbPrecisione">
-                        <option value="0.005">Media</option>
-                        <option selected value="0.0005">Alta</option>
-                        <option value="0.00005">Estremamente alta</option>
+                        <option selected value="0.01">Default</option>
+                        <option value="0.001">Alta</option>
+                        <option value="0.0001">Molto alta</option>
                     </select>
                 </div>
             </div>

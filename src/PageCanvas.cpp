@@ -29,6 +29,10 @@ namespace PageCanvas
         canvas.DrawRectangle(x, y, size, size, color);
     }
 
+    void DrawLine(double sx, double sy, double ex, double ey, int size, const char* color) {
+        canvas.DrawLine(sx, sy, ex, ey, size, color);
+    }
+
     void Clear() {
         canvas.Clear();
     }

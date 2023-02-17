@@ -35,8 +35,8 @@ struct HarmonicsGroupInfo {
 };
 
 
-#define DRAW_FN_POINT(f, W, H, image, phase, delta, linewidth, fillStyle, onlypoints) \
-[](double p = 0, const char* color = fillStyle) -> WaveInfo {\
+#define DRAW_FN(f, W, H, image, phase, delta, linewidth, fillStyle, onlypoints) \
+[](double p = 0, const char* color = fillStyle) {\
     static double x = phase;\
     double y = f(x, p);\
     double ex = (W / (image)) * x;\
@@ -47,15 +47,15 @@ struct HarmonicsGroupInfo {
     if(ex >= W) {\
         x = phase;\
         last_x = 0;\
-        return {&last_x,&last_y,&x};\
+        return;\
     }\
     PageCanvas::DrawLine(last_x, last_y, ex, ey, linewidth, color);\
     last_x = ex; last_y = ey;\
-    return {&last_x,&last_y,&x};\
+    CurrentWave = {&last_x,&last_y,&x};\
 }\
 
-#define DRAW_HARMONIC_POINT(f, W, H, image, phase, delta, linewidth, fillStyle, onlypoints) \
-[](int p = 0, const char* color = fillStyle) -> HarmonicsGroupInfo {\
+#define DRAW_HARMONIC(f, W, H, image, phase, delta, linewidth, fillStyle, onlypoints) \
+[](int p = 0, const char* color = fillStyle) {\
     static double x = phase;\
     double y = f(x, p);\
     double ex = (W / (image)) * x;\
@@ -66,12 +66,12 @@ struct HarmonicsGroupInfo {
     if(ex >= W) {\
         x = phase;\
         for(int i = 0; i < HM_MAXN; i++) {last_x[i] = 0; last_y[i] = 0;}\
-        return {last_x,last_y,&x};\
+        return;\
     }\
     if(!last_y[p]) last_y[p] = H/2;\
     PageCanvas::DrawLine(last_x[p], last_y[p], ex, ey, linewidth, color);\
     last_x[p] = ex; last_y[p] = ey;\
-    return {last_x,last_y,&x};\
+    CurrentHarmonics =  {last_x,last_y,&x};\
 }\
 
 namespace Functions
@@ -172,21 +172,21 @@ namespace Functions
 
     // QUADRA
 
-    auto SquareFourierSeries = DRAW_FN_POINT(Functions::SquareWave::Series, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, Precision, 4, "blue", false);
+    auto SquareFourierSeries = DRAW_FN(Functions::SquareWave::Series, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, Precision, 4, "blue", false);
 
-    auto SquareFourierHarmonic = DRAW_HARMONIC_POINT(Functions::SquareWave::SingleHarmonic, (PageCanvas::Width-3), (PageCanvas::Height-3), T, 0, HM_PRECISION, 3, "", true);
+    auto SquareFourierHarmonic = DRAW_HARMONIC(Functions::SquareWave::SingleHarmonic, (PageCanvas::Width-3), (PageCanvas::Height-3), T, 0, HM_PRECISION, 3, "", true);
 
     // DENTE DI SEGA
 
-    auto SawToothFourierSeries = DRAW_FN_POINT(Functions::SawtoothWave::Series, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, Precision, 4, "orange", false);
+    auto SawToothFourierSeries = DRAW_FN(Functions::SawtoothWave::Series, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, Precision, 4, "orange", false);
 
-    auto SawToothFourierHarmonic = DRAW_HARMONIC_POINT(Functions::SawtoothWave::SingleHarmonic, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, HM_PRECISION, 3, "", true);
+    auto SawToothFourierHarmonic = DRAW_HARMONIC(Functions::SawtoothWave::SingleHarmonic, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, HM_PRECISION, 3, "", true);
 
     // TRIANGOLO
     
-    auto TriangleFourierSeries = DRAW_FN_POINT(Functions::TriangleWave::Series, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, Precision, 4, "darkviolet", false);
+    auto TriangleFourierSeries = DRAW_FN(Functions::TriangleWave::Series, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, Precision, 4, "darkviolet", false);
 
-    auto TriangleFourierHarmonic = DRAW_HARMONIC_POINT(Functions::TriangleWave::SingleHarmonic, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, HM_PRECISION, 3, "", true);
+    auto TriangleFourierHarmonic = DRAW_HARMONIC(Functions::TriangleWave::SingleHarmonic, (PageCanvas::Width-4), (PageCanvas::Height-4), T, 0, HM_PRECISION, 3, "", true);
 
     /// @brief Esegue il render di tanti punti quanto vale PointsPerRender. Calcola inoltre tempo di rendering e frame rate.
     void Render(void*) {
@@ -197,13 +197,13 @@ namespace Functions
             switch (Selected)
             {
                 case SQUARE:
-                    CurrentWave = SquareFourierSeries(HarmonicsNumber);
+                    SquareFourierSeries(HarmonicsNumber);
                     break;
                 case TRIANGLE:
-                    CurrentWave = TriangleFourierSeries(HarmonicsNumber);
+                    TriangleFourierSeries(HarmonicsNumber);
                     break;
                 case SAWTOOTH:
-                    CurrentWave = SawToothFourierSeries(HarmonicsNumber);
+                    SawToothFourierSeries(HarmonicsNumber);
                     break;
             }
             if(ViewHarmonics && FirstDrawnHarmonic && LastDrawnHarmonic)
@@ -211,13 +211,13 @@ namespace Functions
                     switch (Selected)
                     {
                         case SQUARE:
-                            CurrentHarmonics = SquareFourierHarmonic(i, HARMONICS_COLORS[i % (sizeof(HARMONICS_COLORS) / sizeof(HARMONICS_COLORS[0]))]);
+                            SquareFourierHarmonic(i, HARMONICS_COLORS[i % (sizeof(HARMONICS_COLORS) / sizeof(HARMONICS_COLORS[0]))]);
                             break;
                         case TRIANGLE:
-                            CurrentHarmonics = TriangleFourierHarmonic(i, HARMONICS_COLORS[i % (sizeof(HARMONICS_COLORS) / sizeof(HARMONICS_COLORS[0]))]);
+                            TriangleFourierHarmonic(i, HARMONICS_COLORS[i % (sizeof(HARMONICS_COLORS) / sizeof(HARMONICS_COLORS[0]))]);
                             break;
                         case SAWTOOTH:
-                            CurrentHarmonics = SawToothFourierHarmonic(i, HARMONICS_COLORS[i % (sizeof(HARMONICS_COLORS) / sizeof(HARMONICS_COLORS[0]))]);
+                            SawToothFourierHarmonic(i, HARMONICS_COLORS[i % (sizeof(HARMONICS_COLORS) / sizeof(HARMONICS_COLORS[0]))]);
                             break;
                     }
         }

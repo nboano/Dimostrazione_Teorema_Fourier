@@ -1,5 +1,5 @@
 # Rappresentazione visiva di alcune onde elementari attraverso le serie di Fourier
-### Di Niccolò Boano & Alberto Gonella
+### Di Niccolò Boano
 
 ## Utilizzo
 
